@@ -73,8 +73,8 @@ export default function Splash({ navigation }) {
         source={require('../../assets/logo.png')}
           resizeMode="contain"
           style={{
-            width: 237,
-            height: 158   
+            width: 407,
+            height: 407   
           }}
         />
         {/* <Animated.Text style={{

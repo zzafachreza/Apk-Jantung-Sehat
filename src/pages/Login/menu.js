@@ -12,10 +12,10 @@ export default function menuLogin({navigation}) {
     }}>
     <View style={{padding:10,}}>
 
-    <View style={{flexDirection:"row", justifyContent:"center", marginTop:95,
+    <View style={{flexDirection:"row", justifyContent:"center", marginTop:20,
     padding:20}}>
         <Image source={require('../../assets/logo.png')}
-            style={{width:300, height:300, alignItems:'center',}}
+            style={{width:407, height:407, alignItems:'center',}}
         />
     </View>
 

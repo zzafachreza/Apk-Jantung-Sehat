@@ -47,7 +47,7 @@ export default function AddAlarmObat({ navigation }) {
   };
 
   const backPage = () => {
-    navigation.goBack()
+    navigation.goBack();
   };
 
   return (
@@ -158,15 +158,15 @@ export default function AddAlarmObat({ navigation }) {
           <View style={styles.timeContainer}>
             <TouchableOpacity style={[styles.timeButton, selectedTime === 'sebelum' && styles.selectedTimeButton]} onPress={() => handleTimeSelect('sebelum')}>
               <Image source={require('../../assets/before_meal.png')} style={styles.beforeMealIcon} />
-              <Text style={styles.timeText}>Sebelum Makan</Text>
+              <Text style={[styles.timeText, { textAlign: 'center' }]}>Sebelum Makan</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.timeButton, selectedTime === 'saat' && styles.selectedTimeButton]} onPress={() => handleTimeSelect('saat')}>
               <Image source={require('../../assets/during_meal.png')} style={styles.duringMealIcon} />
-              <Text style={styles.timeText}>Saat Makan</Text>
+              <Text style={[styles.timeText, { textAlign: 'center' }]}>Saat Makan</Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.timeButton, selectedTime === 'setelah' && styles.selectedTimeButton]} onPress={() => handleTimeSelect('setelah')}>
               <Image source={require('../../assets/after_meal.png')} style={styles.afterMealIcon} />
-              <Text style={styles.timeText}>Setelah Makan</Text>
+              <Text style={[styles.timeText, { textAlign: 'center' }]}>Setelah Makan</Text>
             </TouchableOpacity>
           </View>
         </View>
