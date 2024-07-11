@@ -1,4 +1,4 @@
-import { View, Text, ImageBackground, ScrollView, TouchableWithoutFeedback, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, TouchableWithoutFeedback, Image, StyleSheet, TouchableOpacity, Picker } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { MyButton, MyHeader, MyInput } from '../../components';
 import { colors, fonts } from '../../utils';
@@ -8,6 +8,7 @@ import { showMessage } from 'react-native-flash-message';
 export default function AlarmOlahraga({ navigation }) {
   const [namaOlahraga, setNamaOlahraga] = useState('');
   const [durasiWaktu, setDurasiWaktu] = useState('');
+  const [satuanDurasi, setSatuanDurasi] = useState('menit'); // Default satuan durasi
   const [timerActive, setTimerActive] = useState(false);
   const [time, setTime] = useState(0);
   const timerRef = useRef(null);
@@ -24,10 +25,11 @@ export default function AlarmOlahraga({ navigation }) {
   }, [timerActive]);
 
   useEffect(() => {
-    if (time >= durasiWaktu * 60) {
+    const totalDuration = satuanDurasi === 'jam' ? durasiWaktu * 3600 : durasiWaktu * 60;
+    if (time >= totalDuration) {
       setTimerActive(false);
     }
-  }, [time, durasiWaktu]);
+  }, [time, durasiWaktu, satuanDurasi]);
 
   const handleStart = () => {
     if (namaOlahraga && durasiWaktu) {
@@ -46,7 +48,7 @@ export default function AlarmOlahraga({ navigation }) {
     const newHistoryItem = {
       id: new Date().getTime(), // Unique ID for each entry
       namaOlahraga,
-      durasiWaktu,
+      durasiWaktu: `${durasiWaktu} ${satuanDurasi}`,
       tanggal: new Date().toLocaleDateString(),
       waktu: new Date().toLocaleTimeString()
     };
@@ -58,7 +60,7 @@ export default function AlarmOlahraga({ navigation }) {
       history.push(newHistoryItem);
 
       await AsyncStorage.setItem('riwayatOlahraga', JSON.stringify(history));
-      navigation.navigate('AlarmOlahraga');
+      navigation.navigate('HistoryAlaramOlahraga');
     } catch (error) {
       console.error('Error saving to local storage', error);
     }
@@ -66,17 +68,20 @@ export default function AlarmOlahraga({ navigation }) {
     setTime(0);
     setNamaOlahraga('');
     setDurasiWaktu('');
+    setSatuanDurasi('menit'); // Reset satuan durasi to default
   };
 
   const formatTime = (time) => {
-    const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+    const hours = String(Math.floor(time / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((time % 3600) / 60)).padStart(2, '0');
     const seconds = String(time % 60).padStart(2, '0');
-    return `${minutes}:${seconds}`;
+    return `${hours}:${minutes}:${seconds}`;
   };
 
   const backPage = () => {
-    navigation.goBack()
+    navigation.goBack();
   };
+
   return (
     <ImageBackground source={require('../../assets/bgsplash.png')} style={styles.background}>
       <MyHeader onPress={backPage} judul='Alarm Olahraga' />
@@ -84,7 +89,7 @@ export default function AlarmOlahraga({ navigation }) {
         <View style={styles.timerContainer}>
           <Text style={styles.namaOlahraga}>{namaOlahraga}</Text>
           <Text style={styles.timer}>{formatTime(time)}</Text>
-          {time >= durasiWaktu * 60 && (
+          {time >= (satuanDurasi === 'jam' ? durasiWaktu * 3600 : durasiWaktu * 60) && (
             <MyButton title="Selesai" onPress={handleFinish} />
           )}
         </View>
@@ -98,14 +103,30 @@ export default function AlarmOlahraga({ navigation }) {
               onChangeText={setNamaOlahraga}
             />
 
-            <MyInput
-              label="Durasi Waktu"
-              placeholder="Pilih Durasi Waktu"
-              keyboardType='numeric'
-              value={durasiWaktu}
-              onChangeText={setDurasiWaktu}
-              unitText="Menit"
-            />
+            <View style={styles.pickerContainer}>
+              <Text style={styles.label}>Durasi Waktu</Text>
+              <View style={styles.row}>
+                <View style={styles.halfPicker}>
+                  <Picker
+                    selectedValue={durasiWaktu}
+                    onValueChange={(itemValue, itemIndex) => setDurasiWaktu(itemValue)}
+                  >
+                    {Array.from({ length: 60 }, (_, i) => i + 1).map((item, index) => (
+                      <Picker.Item key={index} label={`${item}`} value={item} />
+                    ))}
+                  </Picker>
+                </View>
+                <View style={styles.halfPicker}>
+                  <Picker
+                    selectedValue={satuanDurasi}
+                    onValueChange={(itemValue, itemIndex) => setSatuanDurasi(itemValue)}
+                  >
+                    <Picker.Item label="Menit" value="menit" />
+                    <Picker.Item label="Jam" value="jam" />
+                  </Picker>
+                </View>
+              </View>
+            </View>
           </View>
         </ScrollView>
       )}
@@ -173,6 +194,27 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary[600],
     fontSize: 18,
     color: colors.primary,
+  },
+  pickerContainer: {
+    marginTop: 20,
+  },
+  label: {
+    fontFamily: fonts.primary[600],
+    fontSize: 18,
+    color: colors.primary,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+  halfPicker: {
+    flex: 1,
+    marginHorizontal: 5,
+    borderWidth: 1,
+    borderRadius: 10,
+    borderColor: '#E7E8EE',
+    backgroundColor: 'white',
   },
   timerContainer: {
     flex: 1,

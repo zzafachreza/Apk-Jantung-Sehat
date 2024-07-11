@@ -5,7 +5,7 @@ import { ScrollView } from 'react-native'
 import { TouchableNativeFeedback } from 'react-native'
 import { Image } from 'react-native'
 
-export default function RiwayatMedis({navigation}) {
+export default function RiwayatTensi({navigation}) {
     const backPage = () => {
         navigation.goBack()
       };
@@ -14,11 +14,8 @@ export default function RiwayatMedis({navigation}) {
     <ImageBackground source={require('../../assets/bgsplash.png')} style={{
         flex:1,  width:'100%', height:'100%', 
     }}>
-    <MyHeader onPress={backPage} judul="Riwayat Medis"/>
+    <MyHeader onPress={backPage} judul="Riwayat"/>
 
-    <View style={{padding:20}}>
-    <MyButton onPress={() => navigation.navigate('RiwayatTensi')} title="Tensi & Gula Darah"/>
-    </View>
     <ScrollView>
         <View style={{padding:10}}>
 
@@ -27,7 +24,7 @@ export default function RiwayatMedis({navigation}) {
 
     <View style={{flexDirection:"row", justifyContent:'flex-end', padding:10, 
     marginBottom:10}}>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('AddRiwayatMedis')}>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('AddTensi')}>
                 <View>
                         <Image source={require('../../assets/plus.png')} style={{
                             width:70, height:70, 

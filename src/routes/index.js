@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Splash, Home, Account, AccountEdit, TeknisiHome, AccountTeknisi, History, Tumbuhanmu, Quiz, TingkatSatu, NotesPage, InputNote, ResultNote, TingkatDua, Logout, LoginPage, menuLogin, Register, WelcomePage, JenisPenyakitJantung, GenderSelect, AlarmObat, AddAlarmObat, AlaramOlahraga, HistoryAlaramOlahraga, RiwayatMedis, AddRiwayatMedis, Artikel } from '../pages';
+import { Splash, Home, Account, AccountEdit, TeknisiHome, AccountTeknisi, History, Tumbuhanmu, Quiz, TingkatSatu, NotesPage, InputNote, ResultNote, TingkatDua, Logout, LoginPage, menuLogin, Register, WelcomePage, JenisPenyakitJantung, GenderSelect, AlarmObat, AddAlarmObat, AlaramOlahraga, HistoryAlaramOlahraga, RiwayatMedis, AddRiwayatMedis, Artikel, RiwayatTensi, AddTensi } from '../pages';
 import { colors } from '../utils';
 import { BottomNavigator, TeknisiBottomNavigator } from '../components';
 import TingkatTiga from '../pages/quiz/tingkattiga';
@@ -22,7 +22,7 @@ const MainApp = () => {
 
 export default function Router() {
   return (
-    <Stack.Navigator initialRouteName=''>
+    <Stack.Navigator initialRouteName='Home'>
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -65,6 +65,25 @@ export default function Router() {
           headerShown: false,
         }}
       />
+
+
+<Stack.Screen
+        name="RiwayatTensi"
+        component={RiwayatTensi}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+<Stack.Screen
+        name="AddTensi"
+        component={AddTensi}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+
 
 
 <Stack.Screen

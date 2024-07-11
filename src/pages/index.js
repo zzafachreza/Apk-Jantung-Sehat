@@ -23,7 +23,8 @@ import HistoryAlaramOlahraga from './AlaramOlahraga/history';
 import RiwayatMedis from './RiwayatMedis';
 import AddRiwayatMedis from './RiwayatMedis/add';
 import Artikel from './Artikel';
-
+import RiwayatTensi from './RiwayatMedis/rriwayat';
+import AddTensi from './RiwayatMedis/addtensi';
 
 
 
@@ -55,8 +56,8 @@ HistoryAlaramOlahraga,
 RiwayatMedis,
 AddRiwayatMedis,
 Artikel,
-
-
+RiwayatTensi,
+AddTensi,
 
 
 
