@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, Picker, Modal, Image } from 'react-native';
-import { MyButton, MyHeader, MyInput, MyCalendar } from '../../components';
+import { MyButton, MyHeader, MyInput, MyCalendar, MyPicker } from '../../components';
 import { ScrollView } from 'react-native';
 import { colors, fonts } from '../../utils';
 import { showMessage } from 'react-native-flash-message';
+import { apiURL, getData } from '../../utils/localStorage';
+import axios from 'axios';
+import moment from 'moment';
 
 export default function AddAlarmObat({ navigation }) {
   const [selectedTime, setSelectedTime] = useState(null);
@@ -29,7 +32,48 @@ export default function AddAlarmObat({ navigation }) {
       });
       return;
     }
-    setModalVisible(true);
+
+
+
+
+
+
+
+
+    getData('user').then(uu => {
+
+      let tanggal_selesai = '';
+      if (satuanDurasi == 'hari') {
+        tanggal_selesai = moment(tanggal).add(jumlahDurasi, 'days').format('YYYY-MM-DD')
+      } else if (satuanDurasi == 'minggu') {
+        tanggal_selesai = moment(tanggal).add(jumlahDurasi, 'weeks').format('YYYY-MM-DD')
+      } else if (satuanDurasi == 'bulan') {
+        tanggal_selesai = moment(tanggal).add(jumlahDurasi, 'months').format('YYYY-MM-DD')
+      }
+
+
+
+      axios.post(apiURL + 'add_obat', {
+        fid_user: uu.id,
+        nama_obat: namaObat,
+        tanggal: tanggal,
+        minum_sehari: berapaKali,
+        jumlah_durasi: jumlahDurasi,
+        satuan_durasi: satuanDurasi,
+        jumlah_jenis: jumlahJenis,
+        jenis_obat: jenisObat,
+        waktu: selectedTime,
+        alarm: waktuSehari,
+        tanggal_selesai: tanggal_selesai
+
+      }).then(res => {
+        console.log(res.data);
+        if (res.data == 200) {
+          showMessage({ type: 'success', message: 'Data berhasil disimpan !' });
+          navigation.goBack();
+        }
+      })
+    })
   };
 
   const handleModalClose = () => {
@@ -41,7 +85,7 @@ export default function AddAlarmObat({ navigation }) {
     setBerapaKali(itemValue);
     const times = [];
     for (let i = 0; i < itemValue; i++) {
-      times.push(`${7 + i * 2}:00`); // Example logic to generate times
+      times.push(`00:00`); // Example logic to generate times
     }
     setWaktuSehari(times);
   };
@@ -50,6 +94,23 @@ export default function AddAlarmObat({ navigation }) {
     navigation.goBack();
   };
 
+  const [jam, setJam] = useState([])
+  useEffect(() => {
+    __getJam();
+  }, [])
+
+
+  const __getJam = () => {
+    let jam = [];
+    for (let i = 1; i <= 24; i++) {
+      let newjam = i.toString().length == 1 ? `0${i}:00` : `${i}:00`
+      jam.push({
+        label: newjam,
+        value: newjam
+      }); // Example logic to generate times
+    }
+    setJam(jam);
+  }
   return (
     <ImageBackground source={require('../../assets/bgsplash.png')} style={styles.background}>
       <MyHeader onPress={backPage} judul="Tambah Obat" />
@@ -84,11 +145,28 @@ export default function AddAlarmObat({ navigation }) {
           </View>
 
           {waktuSehari.length > 0 && (
-            <View style={styles.timeListContainer}>
+            <View style={{
+              padding: 10,
+              borderWidth: 1,
+              marginVertical: 5,
+              borderRadius: 12,
+              borderColor: colors.border,
+            }}>
               {waktuSehari.map((time, index) => (
-                <View key={index} style={styles.timeItem}>
-                  <Text style={styles.timeText}>{time}</Text>
+
+                <View style={{
+                  flex: 1,
+                  marginBottom: 8,
+                }}>
+                  <MyPicker onValueChange={x => {
+
+                    let tmp = [...waktuSehari];
+                    tmp[index] = x;
+                    console.log(tmp)
+                    setWaktuSehari(tmp)
+                  }} data={jam} label={'Jam ke-' + (index + 1)} />
                 </View>
+
               ))}
             </View>
           )}

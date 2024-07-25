@@ -15,7 +15,7 @@ export default function LoginPage({ navigation }) {
 
   const [kirim, setKirim] = useState({
     api_token: api_token,
-    telepon: null,
+    email: null,
     password: null
   });
   const [loading, setLoading] = useState(false);
@@ -31,17 +31,17 @@ export default function LoginPage({ navigation }) {
   const masuk = () => {
 
 
-    if (kirim.telepon == null && kirim.password == null) {
-      Alert.alert(MYAPP, 'telepon dan Password tidak boleh kosong !');
-    } else if (kirim.telepon == null) {
-      Alert.alert(MYAPP, 'telepon tidak boleh kosong !');
+    if (kirim.email == null && kirim.password == null) {
+      Alert.alert(MYAPP, 'email dan Password tidak boleh kosong !');
+    } else if (kirim.email == null) {
+      Alert.alert(MYAPP, 'email tidak boleh kosong !');
     } else if (kirim.password == null) {
       Alert.alert(MYAPP, 'Password tidak boleh kosong !');
     } else {
 
 
       setLoading(true);
-      console.log(kirim);
+
 
       axios
         .post(apiURL + 'login', kirim)
@@ -55,7 +55,7 @@ export default function LoginPage({ navigation }) {
             })
           } else {
             storeData('user', res.data.data);
-            navigation.replace('MainApp')
+            navigation.replace('Home')
           }
         });
 
@@ -87,90 +87,92 @@ export default function LoginPage({ navigation }) {
 
   return (
     <ImageBackground source={require('../../assets/bgsplash.png')} style={{
-      flex:1,      
-      width:'100%',
-      height:'100%',
+      flex: 1,
+      width: '100%',
+      height: '100%',
+    }}>
+
+      <ScrollView style={{ position: "relative" }}>
+
+
+        <Animated.View style={{
+          padding: 10,
+          flex: 1, margin: 10,
+          bottom: card,
+          borderRadius: 0,
+
         }}>
 
-    <ScrollView style={{position:"relative"}}>
-
- 
-        <Animated.View style={{
-        padding: 10,
-        flex: 1, margin: 10,
-        bottom: card,
-        borderRadius: 0,
-      
-      }}>
-
-      <View style={{padding:10,}}>
+          <View style={{ padding: 10, }}>
 
 
-        <View style={{marginTop:0}}>
-          <Text style={{fontFamily:fonts.primary[600], textAlign:"center",
-          color:colors.primary, fontSize:32}}>Masuk</Text>
+            <View style={{ marginTop: 0 }}>
+              <Text style={{
+                fontFamily: fonts.primary[600], textAlign: "center",
+                color: colors.primary, fontSize: 32
+              }}>Masuk</Text>
+            </View>
+
+            <MyGap jarak={0} />
+            <View style={{ padding: 0 }}>
+
+              <MyInput placeholder="Email" onChangeText={x => setKirim({ ...kirim, email: x })} />
+              <MyInput placeholder="Password" onChangeText={x => setKirim({ ...kirim, password: x })} secureTextEntry={true} />
+              {/* 
+              <View style={{ padding: 10, flexDirection: "row", justifyContent: "flex-end" }}>
+                <TouchableWithoutFeedback>
+                  <Text style={{ fontFamily: fonts.primary[300], fontSize: 15 }}>Lupa Password</Text>
+                </TouchableWithoutFeedback>
+              </View> */}
+
+            </View>
+
+
+
+
+
+
+          </View>
+
+
+
+
+
+
+        </Animated.View>
+        <View style={{ marginTop: '10%' }}>
+
         </View>
-  
-            <MyGap jarak={0}/>
-            <View style={{padding:0}}>
 
-            <MyInput placeholder="Email"/>
-            <MyInput placeholder="Password" secureTextEntry={true}/>
 
-            <View style={{padding:10, flexDirection:"row", justifyContent:"flex-end"}}>
-               <TouchableWithoutFeedback>
-               <Text style={{fontFamily:fonts.primary[300], fontSize:15}}>Lupa Password</Text>
-               </TouchableWithoutFeedback>
-            </View>
-               
-            </View>
-                
-            
 
-               
-    
 
+
+        {loading && <View style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <ActivityIndicator color={colors.secondary} size="large" />
+        </View>}
+      </ScrollView>
+
+      <View style={{ padding: 20 }}>
+        <MyButton onPress={masuk} title="Masuk" />
       </View>
 
-      
 
-
-    
-
-      </Animated.View>
-      <View style={{marginTop:'10%'}}>
-
+      <View style={{ padding: 20 }}>
+        <TouchableNativeFeedback onPress={() => navigation.navigate('Register')}>
+          <View>
+            <Text style={{ fontFamily: fonts.primary[400], textAlign: 'center' }}>Belum memiliki akun?<Text style={{
+              color: colors.primary, fontFamily: fonts.primary[600]
+            }}> Daftar</Text> </Text>
+          </View>
+        </TouchableNativeFeedback>
       </View>
- 
-
-      
 
 
-      {loading && <View style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <ActivityIndicator color={colors.secondary} size="large" />
-      </View>}
-    </ScrollView>
-
-<View style={{padding:20}}>
-<MyButton title="Masuk"/>
-</View>
-   
-
-            <View style={{padding:20}}>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('Register')}>
-                    <View>
-                        <Text style={{fontFamily:fonts.primary[400], textAlign:'center'}}>Belum memiliki akun?<Text style={{
-                            color:colors.primary,  fontFamily:fonts.primary[600]
-                        }}> Daftar</Text> </Text>
-                    </View>
-                </TouchableNativeFeedback>
-            </View>
-
-              
     </ImageBackground>
 
 

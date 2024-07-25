@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Splash, Home, Account, AccountEdit, TeknisiHome, AccountTeknisi, History, Tumbuhanmu, Quiz, TingkatSatu, NotesPage, InputNote, ResultNote, TingkatDua, Logout, LoginPage, menuLogin, Register, WelcomePage, JenisPenyakitJantung, GenderSelect, AlarmObat, AddAlarmObat, AlaramOlahraga, HistoryAlaramOlahraga, RiwayatMedis, AddRiwayatMedis, Artikel, RiwayatTensi, AddTensi } from '../pages';
+import { Splash, Home, Account, AccountEdit, TeknisiHome, AccountTeknisi, History, Tumbuhanmu, Quiz, TingkatSatu, NotesPage, InputNote, ResultNote, TingkatDua, Logout, LoginPage, menuLogin, Register, WelcomePage, JenisPenyakitJantung, GenderSelect, AlarmObat, AddAlarmObat, AlaramOlahraga, HistoryAlaramOlahraga, RiwayatMedis, AddRiwayatMedis, Artikel, RiwayatTensi, AddTensi, ArtikelDetail, StopwatchPage, MedisPdf } from '../pages';
 import { colors } from '../utils';
 import { BottomNavigator, TeknisiBottomNavigator } from '../components';
 import TingkatTiga from '../pages/quiz/tingkattiga';
@@ -13,7 +13,7 @@ const Stack = createStackNavigator();
 
 const MainApp = () => {
   return (
-    <Tab.Navigator initialRouteName='Produk' tabBar={props => <BottomNavigator {...props} />}>
+    <Tab.Navigator initialRouteName='Home' tabBar={props => <BottomNavigator {...props} />}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Account" component={Account} />
     </Tab.Navigator>
@@ -22,7 +22,7 @@ const MainApp = () => {
 
 export default function Router() {
   return (
-    <Stack.Navigator initialRouteName='Home'>
+    <Stack.Navigator initialRouteName='Splash'>
       <Stack.Screen
         name="Splash"
         component={Splash}
@@ -31,7 +31,7 @@ export default function Router() {
         }}
       />
 
-        
+
       <Stack.Screen
         name="Login"
         component={LoginPage}
@@ -44,7 +44,7 @@ export default function Router() {
           headerTintColor: '#fff',
         }}
       />
-   <Stack.Screen
+      <Stack.Screen
         name="Register"
         component={Register}
         options={{
@@ -58,7 +58,7 @@ export default function Router() {
       />
 
 
-<Stack.Screen
+      <Stack.Screen
         name="GenderSelect"
         component={GenderSelect}
         options={{
@@ -67,7 +67,34 @@ export default function Router() {
       />
 
 
-<Stack.Screen
+      <Stack.Screen
+        name="MedisPdf"
+        component={MedisPdf}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+
+
+      <Stack.Screen
+        name="ArtikelDetail"
+        component={ArtikelDetail}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="StopwatchPage"
+        component={StopwatchPage}
+        options={{
+          headerShown: false,
+        }}
+      />
+
+
+      <Stack.Screen
         name="RiwayatTensi"
         component={RiwayatTensi}
         options={{
@@ -75,7 +102,9 @@ export default function Router() {
         }}
       />
 
-<Stack.Screen
+
+
+      <Stack.Screen
         name="AddTensi"
         component={AddTensi}
         options={{
@@ -86,7 +115,7 @@ export default function Router() {
 
 
 
-<Stack.Screen
+      <Stack.Screen
         name="Artikel"
         component={Artikel}
         options={{
@@ -96,7 +125,7 @@ export default function Router() {
 
 
 
-<Stack.Screen
+      <Stack.Screen
         name="AlaramOlahraga"
         component={AlaramOlahraga}
         options={{
@@ -104,7 +133,7 @@ export default function Router() {
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="RiwayatMedis"
         component={RiwayatMedis}
         options={{
@@ -112,7 +141,7 @@ export default function Router() {
         }}
       />
 
-<Stack.Screen
+      <Stack.Screen
         name="AddRiwayatMedis"
         component={AddRiwayatMedis}
         options={{
@@ -121,7 +150,7 @@ export default function Router() {
       />
 
 
-<Stack.Screen
+      <Stack.Screen
         name="Welcome"
         component={WelcomePage}
         options={{
@@ -129,7 +158,7 @@ export default function Router() {
         }}
       />
 
-   <Stack.Screen
+      <Stack.Screen
         name="LoginMenu"
         component={menuLogin}
         options={{
@@ -201,7 +230,7 @@ export default function Router() {
         }}
       />
 
-  
+
       <Stack.Screen
         name="Account"
         component={Account}

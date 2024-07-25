@@ -5,6 +5,7 @@ import { colors, fonts } from '../../utils';
 
 export default function UploadFileComponent() {
   const [file, setFile] = useState(null);
+  const [nama_file, setNamaFile] = useState('')
 
   const selectFile = async () => {
     try {

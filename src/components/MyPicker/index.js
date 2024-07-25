@@ -18,7 +18,7 @@ export default function MyPicker({
     <>
       {label && (
         <View style={styles.labelContainer}>
-          <Icon type="ionicon" name={iconname} color={colorIcon} size={MyDimensi / 4} />
+          {/* <Icon type="ionicon" name={iconname} color={colorIcon} size={MyDimensi / 4} /> */}
           <Text style={[styles.label, styleLabel]}>{label}</Text>
         </View>
       )}
@@ -50,9 +50,9 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
   },
   label: {
-    fontFamily: fonts.primary[400],
+    fontFamily: fonts.secondary[400],
     color: colors.primary,
-    left: 10,
+    // left: 10,
     fontSize: MyDimensi / 4,
   },
   pickerContainer: {

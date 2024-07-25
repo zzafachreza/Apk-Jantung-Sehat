@@ -15,7 +15,7 @@ import { MyDimensi, fonts, windowWidth } from '../../utils/fonts';
 import { MyInput, MyButton } from '../../components';
 import axios from 'axios';
 import { showMessage } from 'react-native-flash-message';
-import { apiURL, api_token, MYAPP } from '../../utils/localStorage';
+import { apiURL, api_token, MYAPP, storeData } from '../../utils/localStorage';
 import SweetAlert from 'react-native-sweet-alert';
 
 export default function Register({ navigation }) {
@@ -23,9 +23,9 @@ export default function Register({ navigation }) {
     const [termsAccepted, setTermsAccepted] = useState(false);
     const [data, setData] = useState({
         api_token: api_token,
-        namalengkap: '',
+        nama_lengkap: '',
         email: '',
-        nomortelepon: '',
+        telepon: '',
         password: '',
         repassword: '',
     });
@@ -52,8 +52,8 @@ export default function Register({ navigation }) {
         }
 
         if (
-            data.namalengkap.length === 0 ||
-            data.nomortelepon.length === 0 ||
+            data.nama_lengkap.length === 0 ||
+            data.telepon.length === 0 ||
             data.password.length === 0 ||
             data.repassword.length === 0
         ) {
@@ -72,7 +72,7 @@ export default function Register({ navigation }) {
                     textAlign: 'center'
                 },
             });
-        } else if (data.namalengkap.length === 0) {
+        } else if (data.nama_lengkap.length === 0) {
             showMessage({
                 message: 'Masukan nama lengkap ibu',
                 type: 'danger',
@@ -88,7 +88,7 @@ export default function Register({ navigation }) {
                     textAlign: 'center'
                 },
             });
-        } else if (data.nomortelepon.length === 0) {
+        } else if (data.telepon.length === 0) {
             showMessage({
                 message: 'Masukan nomor telepon',
                 type: 'danger',
@@ -137,82 +137,86 @@ export default function Register({ navigation }) {
                 },
             });
         } else {
-            setLoading(true);
-            axios
-                .post(apiURL + 'register', data)
-                .then(res => {
-                    setLoading(false);
-                    if (res.data.status == 404) {
-                        SweetAlert.showAlertWithOptions({
-                            title: MYAPP,
-                            subTitle: res.data.message,
-                            style: 'error',
-                            cancellable: true
-                        });
-                    } else {
-                        setModalVisible(true);
-                    }
-                })
-                .catch(error => {
-                    setLoading(false);
-                    showMessage({
-                        message: 'Terjadi kesalahan, silakan coba lagi',
-                        type: 'danger',
-                        icon: 'danger',
-                        duration: 3000,
-                        style: {
-                            marginTop: 40,
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                        },
-                        titleStyle: {
-                            fontFamily: fonts.primary[600],
-                            textAlign: 'center'
-                        },
-                    });
-                });
+            // setLoading(true);
+            console.log(data);
+            setModalVisible(true);
+            // axios
+            //     .post(apiURL + 'register', data)
+            //     .then(res => {
+            //         console.log(res.data)
+            //         setLoading(false);
+            //         if (res.data.status == 404) {
+            //             SweetAlert.showAlertWithOptions({
+            //                 title: MYAPP,
+            //                 subTitle: res.data.message,
+            //                 style: 'error',
+            //                 cancellable: true
+            //             });
+            //         } else if (res.data.status == 200) {
+            //             storeData('user', res.data.data)
+            //             setModalVisible(true);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         setLoading(false);
+            //         showMessage({
+            //             message: 'Terjadi kesalahan, silakan coba lagi',
+            //             type: 'danger',
+            //             icon: 'danger',
+            //             duration: 3000,
+            //             style: {
+            //                 marginTop: 40,
+            //                 justifyContent: 'center',
+            //                 alignItems: 'center'
+            //             },
+            //             titleStyle: {
+            //                 fontFamily: fonts.primary[600],
+            //                 textAlign: 'center'
+            //             },
+            //         });
+            //     });
         }
     };
 
     const handleModalClose = () => {
         setModalVisible(false);
-        navigation.navigate('Welcome');
+        navigation.navigate('Welcome', data);
     };
 
     return (
-        <ImageBackground 
+        <ImageBackground
             source={require('../../assets/bgsplash.png')}
             style={styles.background}>
             <ScrollView>
                 <View style={styles.formContainer}>
                     <Text style={styles.headerText}>Daftar</Text>
-                    <MyInput 
-                        placeholder="Nama Lengkap" 
-                        value={data.namalengkap} 
-                        onChangeText={(val) => setData({ ...data, namalengkap: val })} 
+                    <MyInput
+                        placeholder="Nama Lengkap"
+                        value={data.nama_lengkap}
+                        onChangeText={(val) => setData({ ...data, nama_lengkap: val })}
                     />
-                    <MyInput 
-                        placeholder="Email" 
-                        value={data.email} 
-                        onChangeText={(val) => setData({ ...data, email: val })} 
+                    <MyInput
+                        placeholder="Email"
+                        value={data.email}
+                        onChangeText={(val) => setData({ ...data, email: val })}
                     />
-                    <MyInput 
-                        placeholder="Nomor Telepon" 
-                        keyboardType="numeric" 
-                        value={data.nomortelepon} 
-                        onChangeText={(val) => setData({ ...data, nomortelepon: val })} 
+                    <MyInput
+                        placeholder="Nomor Telepon"
+                        keyboardType="numeric"
+                        value={data.telepon}
+                        onChangeText={(val) => setData({ ...data, telepon: val })}
                     />
-                    <MyInput 
-                        placeholder="Kata Sandi" 
-                        secureTextEntry={true} 
-                        value={data.password} 
-                        onChangeText={(val) => setData({ ...data, password: val })} 
+                    <MyInput
+                        placeholder="Kata Sandi"
+                        secureTextEntry={true}
+                        value={data.password}
+                        onChangeText={(val) => setData({ ...data, password: val })}
                     />
-                    <MyInput 
-                        placeholder="Konfirmasi Kata Sandi" 
-                        secureTextEntry={true} 
-                        value={data.repassword} 
-                        onChangeText={(val) => setData({ ...data, repassword: val })} 
+                    <MyInput
+                        placeholder="Konfirmasi Kata Sandi"
+                        secureTextEntry={true}
+                        value={data.repassword}
+                        onChangeText={(val) => setData({ ...data, repassword: val })}
                     />
                     <View style={styles.termsContainer}>
                         <CheckBox
@@ -226,18 +230,18 @@ export default function Register({ navigation }) {
                 </View>
             </ScrollView>
             <View style={{ padding: 10 }}>
-                <MyButton 
-                    title="Simpan" 
-                    onPress={simpan} 
-                    disabled={loading} 
-                    loading={loading} 
+                <MyButton
+                    title="Simpan"
+                    onPress={simpan}
+                    disabled={loading}
+                    loading={loading}
                 />
             </View>
             <View style={{ padding: 20 }}>
                 <TouchableNativeFeedback onPress={() => navigation.navigate('Register')}>
                     <View>
                         <Text style={{ fontFamily: fonts.primary[400], textAlign: 'center' }}>
-                            Belum memiliki akun? 
+                            Belum memiliki akun?
                             <Text style={{ color: colors.primary, fontFamily: fonts.primary[600] }}>
                                 Masuk
                             </Text>
@@ -285,6 +289,7 @@ const styles = StyleSheet.create({
     },
     termsText: {
         marginLeft: 10,
+        fontSize: 12,
         fontFamily: fonts.primary[400],
         color: 'gray',
     },
@@ -299,7 +304,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         padding: 35,
-        alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -313,6 +317,7 @@ const styles = StyleSheet.create({
         width: 100,
         height: 100,
         marginBottom: 15,
+        alignSelf: 'center'
     },
     modalText: {
         marginBottom: 15,

@@ -26,7 +26,7 @@ export default function ({ navigation, route }) {
     const [com, setCom] = useState({});
     const isFocused = useIsFocused();
     const [wa, setWA] = useState('');
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
 
 
@@ -35,8 +35,7 @@ export default function ({ navigation, route }) {
 
         if (isFocused) {
             getData('user').then(res => {
-                console.log(res)
-                setOpen(true);
+
                 setUser(res);
 
             });
@@ -120,53 +119,36 @@ export default function ({ navigation, route }) {
                             margin: 5,
                             flex: 1,
                         }}>
-                            <View style={{
-                                justifyContent: 'center',
-                                alignItems: 'center'
-                            }}>
-                                <View style={{
-                                    width: 100,
-                                    height: 100,
-                                    borderWidth: 1,
-                                    borderColor: colors.border,
-                                    overflow: 'hidden',
-                                    borderRadius: 20,
-                                    justifyContent: 'center',
-                                    alignItems: 'center'
-                                }}>
 
-                                    <Image source={{
-                                        uri: user.foto_user
-                                    }} style={{
-                                        width: 100,
-                                        height: 100,
-
-                                    }} />
-
-                                </View>
-                            </View>
-                            <Text style={{
-                                fontFamily: fonts.secondary[800],
-                                fontSize: MyDimensi / 3,
-                                textAlign: 'center',
-                                marginVertical: 10,
-                                color: colors.primary
-                            }}>{user.level}</Text>
                             <View style={{ padding: 10, }}>
                                 <MyList label="Nama Lengkap" value={user.nama_lengkap} />
-                                <MyList label="Telepon / Whatsapp" value={user.telepon} />
-                                <MyList label="Alamat" value={user.alamat} />
-                                <MyList label="Kecamatan" value={user.kecamatan} />
-                                <MyList label="Desa" value={user.desa} />
-                                <MyList label="Posyandu" value={user.posyandu} />
+                                <MyList label="Jenis User" value={user.tipe} />
+                                <MyList label="Email" value={user.email} />
+                                <MyList label="Telepon" value={user.telepon} />
+                                <MyList label="Jenis Penyakit" value={user.jenis_penyakit} />
+                                <MyList label="Jenis Kelamin" value={user.jenis_kelamin} />
 
-                                {user.level == 'IBU' &&
-                                    <>
-                                        <MyList label="Nama Anak" value={user.nama_anak} />
-                                        <MyList label="Tanggal Lahir Anak" value={moment(user.tanggal_lahir).format('DD MMMM YYYY')} />
-                                        <MyList label="Jenis Kelamin" value={user.jenis_kelamin} />
-                                    </>
-                                }
+                                <View style={{
+                                    padding: 10,
+                                    borderWidth: 1,
+                                    borderColor: colors.border,
+                                    borderRadius: 10,
+                                }}>
+                                    <Text style={{
+                                        fontFamily: fonts.secondary[800],
+                                        fontSize: 14,
+                                        marginBottom: 12,
+                                    }}>Data Pribadi</Text>
+                                    <MyList label="Umur" value={moment().diff(user.tanggal_lahir, 'year') + ' Tahun'} />
+                                    <MyList label="Tinggi Badan" value={user.tinggi_badan + ' cm'} />
+                                    <MyList label="Berat Badan" value={user.berat_badan + ' kg'} />
+                                    <MyList label="Tempat Lahir" value={user.tempat_lahir} />
+                                    <MyList label="Tanggal Lahir" value={user.tanggal_lahir} />
+                                    <MyList label="Alamat" value={user.alamat} />
+                                </View>
+
+
+
 
 
                             </View>
@@ -179,8 +161,9 @@ export default function ({ navigation, route }) {
                 }}>
                     <MyButton warna={colors.primary} title="Edit Profile" Icons="create-outline" onPress={() => navigation.navigate('AccountEdit', user)} />
                     <MyGap jarak={10} />
-                    <MyButton onPress={btnKeluar} warna={colors.secondary} title="Log Out" Icons="log-out-outline" iconColor={colors.white} colorText={colors.white} />
+                    <MyButton onPress={btnKeluar} warna={colors.secondary} title="Log Out" Icons="log-out-outline" iconColor={colors.primary} colorText={colors.primary} />
                 </View>
+                <MyGap jarak={40} />
             </ScrollView>
         </SafeAreaView >
     );

@@ -20,7 +20,7 @@ export default function MyCalendar({
     <>
       {label && (
         <View style={styles.labelContainer}>
-          <Icon type="ionicon" name={iconname} color={iconColor} size={MyDimensi / 4} />
+          {/* <Icon type="ionicon" name={iconname} color={iconColor} size={MyDimensi / 4} /> */}
           <Text style={[styles.label, styleLabel]}>{label}</Text>
         </View>
       )}
@@ -31,7 +31,7 @@ export default function MyCalendar({
           date={value}
           mode="date"
           placeholder={placeholder}
-          
+
           showIcon={false}
           format="YYYY-MM-DD"
           confirmBtnText="Confirm"
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.secondary[400],
     color: colors.primary,
     left: 0,
-    fontSize: 15,
+    fontSize: MyDimensi / 4,
   },
   calendarContainer: {
     backgroundColor: colors.white,

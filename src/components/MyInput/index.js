@@ -28,7 +28,7 @@ export default function MyInput({
   label2,
   styleLabel,
   colorIcon = colors.primary,
-  placeholderTextColor = colors.primary,
+  placeholderTextColor = colors.border,
   unitText // Prop for the unit text
 }) {
   const [tutup, setTutup] = useState(true);
@@ -95,20 +95,20 @@ const styles = StyleSheet.create({
   labelContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingBottom: 5,
   },
   label: {
     fontFamily: fonts.secondary[400],
     color: colors.primary,
     left: 0,
-    fontSize: 15,
+    fontSize: MyDimensi / 4,
   },
   inputContainer: {
     position: 'relative',
   },
   textInput: {
     borderRadius: 10,
-    paddingLeft: 20,
+    paddingLeft: 10,
     fontSize: MyDimensi / 4,
     fontFamily: fonts.primary[400],
     height: 48,

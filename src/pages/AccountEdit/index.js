@@ -52,12 +52,6 @@ export default function AccountEdit({ navigation, route }) {
         })
     }
 
-    useEffect(() => {
-        setKirim({
-            ...kirim,
-            newfoto_user: null,
-        })
-    }, [])
 
     return (
         <SafeAreaView style={{
@@ -69,68 +63,31 @@ export default function AccountEdit({ navigation, route }) {
                 paddingHorizontal: 20,
             }}>
 
-                <View style={{
-                    padding: 10,
-                    justifyContent: 'center',
-                    alignItems: 'center'
-                }}>
-                    <TouchableOpacity onPress={() => {
-
-
-                        launchImageLibrary({
-                            includeBase64: true,
-                            quality: 1,
-                            mediaType: "photo",
-                            maxWidth: 200,
-                            maxHeight: 200
-                        }, response => {
-                            // console.log('All Response = ', response);
-
-                            setKirim({
-                                ...kirim,
-                                newfoto_user: `data:${response.type};base64, ${response.base64}`,
-                            });
-                        });
 
 
 
-                    }} style={{
-                        width: 100,
-                        height: 100,
-                        borderWidth: 1,
-                        borderColor: colors.border,
-                        overflow: 'hidden',
-                        borderRadius: 20,
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }}>
-                        <Image style={{
-                            width: 100,
-                            height: 100,
-                        }} source={{
-                            uri: kirim.newfoto_user !== null ? kirim.newfoto_user : kirim.foto_user,
-                        }} />
-                    </TouchableOpacity>
-                </View>
-
-
-
-                <MyInput label="Nama Lengkap Ibu" iconname="person-outline" value={kirim.nama_lengkap} onChangeText={x => setKirim({ ...kirim, nama_lengkap: x })} />
+                <MyInput label="Nama Lengkap" value={kirim.nama_lengkap} onChangeText={x => setKirim({ ...kirim, nama_lengkap: x })} />
                 <MyGap jarak={5} />
-                <MyInput label="Telepon / Whatsapp" iconname="logo-whatsapp" keyboardType="phone-pad" value={kirim.telepon} onChangeText={x => setKirim({ ...kirim, telepon: x })} />
 
-
-                <MyGap jarak={5} />
-                <MyInput label="Alamat" placeholder="masukan alamat" multiline iconname="home-outline" value={kirim.alamat} onChangeText={x => setKirim({ ...kirim, alamat: x })} />
-                <MyGap jarak={5} />
-                <MyInput label="Nama Anak" placeholder="masukan nama anak" multiline iconname="home-outline" value={kirim.nama_anak} onChangeText={x => setKirim({ ...kirim, nama_anak: x })} />
-                <MyGap jarak={5} />
-                <MyCalendar value={kirim.tanggal_lahir} onDateChange={x => {
+                <MyPicker label="Jenis User" value={kirim.tipe} onValueChange={x => {
                     setKirim({
                         ...kirim,
-                        tanggal_lahir: x
+                        tipe: x
                     })
-                }} valueShow={moment(kirim.tanggal_lahir).format('DD MMMM YYYY')} label="Tanggal Lahir" iconname="calendar-outline" />
+                }} data={[
+                    { label: 'Pasien', value: 'Pasien' },
+                    { value: 'Pendamping', label: 'Pendamping' },
+
+                ]} />
+                <MyGap jarak={5} />
+                <MyInput label="Email" value={kirim.email} onChangeText={x => setKirim({ ...kirim, email: x })} />
+
+
+                <MyGap jarak={5} />
+                <MyInput label="Telepon" keyboardType="phone-pad" value={kirim.telepon} onChangeText={x => setKirim({ ...kirim, telepon: x })} />
+                <MyGap jarak={5} />
+                <MyInput label="Jenis Penyakit" value={kirim.jenis_penyakit} onChangeText={x => setKirim({ ...kirim, jenis_penyakit: x })} />
+
                 <MyGap jarak={5} />
 
                 <MyPicker iconname="male-female-outline" label="Jenis Kelamin" value={kirim.jenis_kelamin} onValueChange={x => {
@@ -144,13 +101,35 @@ export default function AccountEdit({ navigation, route }) {
 
                 ]} />
 
+                <MyGap jarak={20} />
+                <Text style={{
+                    fontFamily: fonts.secondary[800],
+                    fontSize: 14,
+                    marginBottom: 12,
+                }}>Data Pribadi</Text>
+                <MyInput label="Tinggi Badan ( cm )" keyboardType="number-pad" value={kirim.tinggi_badan} onChangeText={x => setKirim({ ...kirim, tinggi_badan: x })} />
+                <MyGap jarak={5} />
+                <MyInput label="Berat Badan ( kg )" keyboardType="number-pad" value={kirim.berat_badan} onChangeText={x => setKirim({ ...kirim, berat_badan: x })} />
+                <MyGap jarak={5} />
+                <MyInput label="Tempat Lahir" value={kirim.tempat_lahir} onChangeText={x => setKirim({ ...kirim, tempat_lahir: x })} />
+                <MyGap jarak={5} />
+                <MyCalendar value={kirim.tanggal_lahir} onDateChange={x => {
+                    setKirim({
+                        ...kirim,
+                        tanggal_lahir: x
+                    })
+                }} valueShow={moment(kirim.tanggal_lahir).format('DD MMMM YYYY')} label="Tanggal Lahir" iconname="calendar-outline" />
+
+                <MyGap jarak={5} />
+                <MyInput label="Alamat" placeholder="masukan alamat" multiline value={kirim.alamat} onChangeText={x => setKirim({ ...kirim, alamat: x })} />
+
                 <MyGap jarak={5} />
 
-                <MyInput label="Password" iconname="lock-closed-outline" secureTextEntry={true} onChangeText={x => setKirim({ ...kirim, newpassword: x })} placeholder="Kosongkan jika tidak diubah" />
+                <MyInput label="Password" secureTextEntry={true} onChangeText={x => setKirim({ ...kirim, newpassword: x })} placeholder="Kosongkan jika tidak diubah" />
                 <MyGap jarak={20} />
                 {loading && <ActivityIndicator color={colors.primary} size="large" />}
 
-                {!loading && <MyButton warna={colors.secondary} colorText={colors.white} iconColor={colors.white} onPress={sendServer} title="Simpan Perubahan" Icons="download-outline" />}
+                {!loading && <MyButton warna={colors.secondary} colorText={colors.primary} iconColor={colors.primary} onPress={sendServer} title="Simpan Perubahan" Icons="download-outline" />}
                 <MyGap jarak={20} />
             </ScrollView>
         </SafeAreaView >

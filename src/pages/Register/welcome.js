@@ -11,7 +11,9 @@ import { showMessage } from 'react-native-flash-message';
 import { colors, fonts } from '../../utils';
 import { MyButton } from '../../components';
 
-export default function WelcomePage({ navigation }) {
+export default function WelcomePage({ navigation, route }) {
+    const [data, setData] = useState(route.params)
+
     const [step, setStep] = useState(1);
     const [selectedRole, setSelectedRole] = useState(null);
 
@@ -31,7 +33,10 @@ export default function WelcomePage({ navigation }) {
                 titleStyle: { fontFamily: fonts.primary[600], textAlign: 'center' },
             });
         } else {
-            navigation.navigate('JenisPenyakitJantung');
+            navigation.navigate('JenisPenyakitJantung', {
+                ...data,
+                tipe: selectedRole
+            });
         }
     };
 

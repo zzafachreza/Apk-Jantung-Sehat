@@ -1,26 +1,32 @@
-import { View, Text, ImageBackground, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, ScrollView, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { MyHeader } from '../../components';
 import { colors, fonts } from '../../utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getData, storeData } from '../../utils/localStorage';
+import { useIsFocused } from '@react-navigation/native';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { Icon } from 'react-native-elements';
 
-export default function HistoryAlarmOlahraga({navigation}) {
-  const [history, setHistory] = useState([]);
-
+export default function HistoryAlarmOlahraga({ navigation }) {
+  const [data, setData] = useState([]);
+  const isFocus = useIsFocused();
   useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const storedHistory = await AsyncStorage.getItem('riwayatOlahraga');
-        if (storedHistory) {
-          setHistory(JSON.parse(storedHistory));
-        }
-      } catch (error) {
-        console.error('Error fetching history', error);
-      }
-    };
+    if (isFocus) {
+      __getTransaction();
+    }
 
-    fetchHistory();
-  }, []);
+  }, [isFocus]);
+
+  const __getTransaction = () => {
+    getData('olahraga').then(res => {
+      if (!res) {
+        setData([])
+      } else {
+        setData(res)
+      }
+    })
+  }
 
 
   const backPage = () => {
@@ -29,19 +35,68 @@ export default function HistoryAlarmOlahraga({navigation}) {
   return (
     <ImageBackground source={require('../../assets/bgsplash.png')} style={styles.background}>
       <MyHeader onPress={backPage} judul='Riwayat Olahraga' />
-      <ScrollView>
-        <View style={styles.container}>
-          {history.map((item, index) => (
-            <View key={item.id || index} style={styles.historyItem}>
-              <View style={styles.historyItemText}>
-                <Text style={styles.historyItemTitle}>{item.namaOlahraga}</Text>
-                <Text style={styles.historyItemSubtitle}>{item.tanggal} | {item.waktu} WIB</Text>
+      <View style={{
+        flex: 1,
+        padding: 16
+      }}>
+        <FlatList data={data} renderItem={({ item, index }) => {
+          return (
+
+            <View style={{
+              borderWidth: 1,
+              padding: 10,
+              marginVertical: 5,
+              borderRadius: 12,
+              borderColor: colors.border,
+            }}>
+              <View style={{
+                flexDirection: 'row',
+              }}>
+                <View style={{
+                  flex: 1,
+                }}>
+                  <Text style={{
+                    fontFamily: fonts.secondary[600],
+                    fontSize: 25,
+                    color: colors.primary,
+                  }}>{item.nama_olahraga}</Text>
+                  <Text style={{
+                    fontFamily: fonts.secondary[600],
+                    fontSize: 11,
+                    color: colors.border,
+                  }}>{item.tanggal} {item.jam}</Text>
+                </View>
+                <View style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'flex-end'
+                }}>
+                  <Text style={{
+                    textAlign: 'right',
+                    fontFamily: fonts.secondary[600],
+                    fontSize: 25,
+                    color: colors.primary,
+                  }}>{item.real}</Text>
+                </View>
+                <TouchableOpacity style={{
+                  width: 50,
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }} onPress={() => {
+                  let tmp = [...data];
+                  tmp.splice(index, 1);
+                  console.log(tmp);
+                  setData(tmp);
+                  storeData('olahraga', tmp)
+                }}>
+                  <Icon type='ionicon' name='trash' color={colors.danger} />
+                </TouchableOpacity>
               </View>
-              <Text style={styles.historyItemDuration}>{item.durasiWaktu}:00:00</Text>
             </View>
-          ))}
-        </View>
-      </ScrollView>
+
+          )
+        }} />
+      </View>
     </ImageBackground>
   );
 }

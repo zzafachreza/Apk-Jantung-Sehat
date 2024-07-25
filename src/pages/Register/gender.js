@@ -12,8 +12,12 @@ import {
 import { showMessage } from 'react-native-flash-message';
 import { colors, fonts } from '../../utils';
 import { MyButton } from '../../components';
+import { apiURL, MYAPP, storeData } from '../../utils/localStorage';
+import axios from 'axios';
+import SweetAlert from 'react-native-sweet-alert';
 
-export default function GenderSelect({ navigation }) {
+export default function GenderSelect({ navigation, route }) {
+    const [data, setData] = useState(route.params)
     const [selectedGender, setSelectedGender] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -32,7 +36,46 @@ export default function GenderSelect({ navigation }) {
             });
             return;
         }
-        setModalVisible(true);
+
+
+        axios
+            .post(apiURL + 'register', {
+                ...data,
+                jenis_kelamin: selectedGender
+            })
+            .then(res => {
+                console.log(res.data)
+                // setLoading(false);
+                if (res.data.status == 404) {
+                    SweetAlert.showAlertWithOptions({
+                        title: MYAPP,
+                        subTitle: res.data.message,
+                        style: 'error',
+                        cancellable: true
+                    });
+                } else if (res.data.status == 200) {
+                    storeData('user', res.data.data)
+                    setModalVisible(true);
+                }
+            })
+            .catch(error => {
+                // setLoading(false);
+                showMessage({
+                    message: 'Terjadi kesalahan, silakan coba lagi',
+                    type: 'danger',
+                    icon: 'danger',
+                    duration: 3000,
+                    style: {
+                        marginTop: 40,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    },
+                    titleStyle: {
+                        fontFamily: fonts.primary[600],
+                        textAlign: 'center'
+                    },
+                });
+            });
     };
 
     const handleModalClose = () => {

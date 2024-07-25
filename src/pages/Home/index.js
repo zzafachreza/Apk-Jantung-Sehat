@@ -1,4 +1,4 @@
-import { Alert, StyleSheet, Text, View, Image, FlatList, ActivityIndicator, Dimensions, ImageBackground, TouchableWithoutFeedback, TouchableNativeFeedback, Linking, BackHandler } from 'react-native';
+import { Alert, StyleSheet, Text, View, Image, PermissionsAndroid, FlatList, ActivityIndicator, Dimensions, ImageBackground, TouchableWithoutFeedback, TouchableNativeFeedback, Linking, BackHandler, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { apiURL, getData, MYAPP, storeData } from '../../utils/localStorage';
@@ -12,23 +12,40 @@ import { MyGap, MyHeader } from '../../components';
 import { ScrollView } from 'react-native-gesture-handler';
 import Carousel from 'react-native-snap-carousel';
 import MyMenu from '../../components/MyMenu';
+import messaging from '@react-native-firebase/messaging';
+import PushNotification, { Importance } from 'react-native-push-notification';
+import SoundPlayer from 'react-native-sound-player'
 
 export default function Home({ navigation, route }) {
   const [user, setUser] = useState({});
   const isFocus = useIsFocused();
-  const [carouselData, setCarouselData] = useState([
-    {
-      id: '1',
-      image: require('../../assets/carousel1.png'),
-    },
-    {
-      id: '2',
-      image: require('../../assets/carousel2.png'),
-    },
-  ]);
+  const [carouselData, setCarouselData] = useState([]);
+
   const [open, setOpen] = useState(false);
   const [comp, setComp] = useState({});
   const carouselRef = useRef(null);
+
+  const PlaySuara = () => {
+    try {
+      // play the file tone.mp3
+      SoundPlayer.playSoundFile('obat', 'mp3')
+      // or play from url
+
+    } catch (e) {
+      console.log(`cannot play the sound file`, e)
+    }
+  }
+
+
+  const requestNotificationPermission = async () => {
+    try {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      )
+    } catch (err) {
+      console.warn('requestNotificationPermission error: ', err)
+    }
+  }
 
   const _getTransaction = async () => {
     await getData('user').then(u => {
@@ -38,19 +55,106 @@ export default function Home({ navigation, route }) {
     await axios.post(apiURL + 'company').then(res => {
       setComp(res.data.data);
     });
+
+    await axios.post(apiURL + 'artikel').then(res => {
+      setCarouselData(res.data);
+    })
   }
 
   useEffect(() => {
+    requestNotificationPermission();
     if (isFocus) {
       _getTransaction();
+      updateTOKEN();
     }
+
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+
+      const json = JSON.stringify(remoteMessage.notification);
+      const obj = JSON.parse(json);
+
+      console.log('remote message', remoteMessage);
+
+      PushNotification.localNotification({
+        /* Android Only Properties */
+        channelId: 'JantungSehatID', // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        title: obj.title, // (optional)
+        message: obj.body, // (required)
+        vibrate: true,
+        playSound: true,
+        soundName: 'android.resource://com.jantungsehat/raw/obat'
+
+      });
+      // PlaySuara()
+
+    });
+
+    messaging().setBackgroundMessageHandler(async remoteMessage => {
+
+      const json = JSON.stringify(remoteMessage.notification);
+      const obj = JSON.parse(json);
+
+      console.log('remote message', remoteMessage);
+
+      PushNotification.localNotification({
+        /* Android Only Properties */
+        priority: 'high',
+        importance: Importance.HIGH,
+        channelId: 'JantungSehatID', // (required) channelId, if the channel doesn't exist, notification will not trigger.
+        title: obj.title, // (optional)
+        message: obj.body, // (required)
+        soundName: 'obat',
+        playSound: true,
+        vibrate: true,
+
+      });
+    });
+
+
+
+
+    return unsubscribe;
+
   }, [isFocus]);
+
+  const updateTOKEN = () => {
+    getData('user').then(uu => {
+      setUser(uu);
+
+      axios.post(apiURL + 'get_token', {
+        id: uu.id
+      }).then(res => {
+
+        getData('token').then(token => {
+          console.log(token.token);
+          // alert(token.token);
+
+          if (token.token !== res.data) {
+            console.log('update TOKEN');
+            axios.post(apiURL + 'update_token', {
+              id: uu.id,
+              token: token.token
+            }).then(resp => {
+              // console.log('token berhasil diperbaharui', resp.data)
+            })
+          } else {
+            // console.log('token terbaru')
+          }
+        })
+
+      })
+
+
+    })
+  }
 
   const _renderItem = ({ item }) => {
     return (
-      <TouchableWithoutFeedback onPress={() => Alert.alert('Info', 'Anda mengklik gambar')}>
+      <TouchableWithoutFeedback onPress={() => navigation.navigate('ArtikelDetail', item)}>
         <View style={styles.carouselItem}>
-          <Image source={item.image} style={styles.carouselImage} />
+          <Image source={{
+            uri: item.image
+          }} style={styles.carouselImage} />
         </View>
       </TouchableWithoutFeedback>
     );
@@ -62,11 +166,27 @@ export default function Home({ navigation, route }) {
       <ImageBackground source={require('../../assets/bgheader.png')} style={{ padding: 10, flexDirection: 'row', justifyContent: "space-between", paddingTop: 20 }}>
         {/* NAMA USER */}
         <View>
-          <Text style={{ color: colors.white, fontFamily: fonts.primary[300], fontSize: 20 }}>Hi Fadhlan Himawan</Text>
+          <Text style={{ color: colors.white, fontFamily: fonts.primary[300], fontSize: 20 }}>Ha, {user.nama_lengkap}</Text>
           <Text style={{ color: colors.white, fontFamily: fonts.primary[600], fontSize: 12 }}>Jangan Biarkan Penyakit Jantung{'\n'}Menghalangi Langkahmu. Tetap Semangat!</Text>
         </View>
         <View>
-          <Image source={require('../../assets/logo.png')} style={{ width: 46, height: 71 }} />
+          <TouchableOpacity onPress={() => {
+            PushNotification.localNotification({
+              /* Android Only Properties */
+
+              channelId: 'JantungSehatID', // (required) channelId, if the channel doesn't exist, notification will not trigger.
+              title: 'test', // (optional)
+              message: '123', // (required)
+              vibrate: true,
+              playSound: true,
+              soundName: 'android.resource://com.jantungsehat/raw/obat'
+
+
+            });
+            // PlaySuara()
+          }}>
+            <Image source={require('../../assets/logo.png')} style={{ width: 46, height: 71 }} />
+          </TouchableOpacity>
         </View>
       </ImageBackground>
 
@@ -76,55 +196,55 @@ export default function Home({ navigation, route }) {
           <Carousel
             ref={carouselRef}
             data={carouselData}
-            renderItem={ _renderItem }
-            sliderWidth={ windowWidth }
-            itemWidth={ windowWidth * 0.8 }
+            renderItem={_renderItem}
+            sliderWidth={windowWidth}
+            itemWidth={windowWidth / 1.5}
             layout={'default'}
           />
           {/* END COROUSEL */}
         </View>
 
         {/* MENU */}
-        <View style={{padding:10}}>
+        <View style={{ padding: 10 }}>
 
-        <View style={{flexDirection:"row", justifyContent:"space-around"}}>
+          <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
 
-        {/* ALARM OBAT */}
-        <TouchableWithoutFeedback onPress={() => navigation.navigate('AlarmObat')}>
-          <View >
-            <Image source={require('../../assets/alarm_obat.png')} style={{width:144, height:144}}/>
-            <Text style={{textAlign:"center", fontFamily:fonts.primary[400], fontSize:15, }}>Alarm Obat</Text>
+            {/* ALARM OBAT */}
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('AlarmObat')}>
+              <View >
+                <Image source={require('../../assets/alarm_obat.png')} style={{ width: windowWidth / 3, height: windowWidth / 3 }} />
+                <Text style={{ textAlign: "center", fontFamily: fonts.primary[400], fontSize: 14, }}>Alarm Obat</Text>
+              </View>
+            </TouchableWithoutFeedback>
+
+            {/* Alarm Olahraga */}
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('AlaramOlahraga')}>
+              <View >
+                <Image source={require('../../assets/alarm_olahraga.png')} style={{ width: windowWidth / 3, height: windowWidth / 3 }} />
+                <Text style={{ textAlign: "center", fontFamily: fonts.primary[400], fontSize: 14, }}>Alarm Olahraga</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableWithoutFeedback>
 
-        {/* Alarm Olahraga */}
-        <TouchableWithoutFeedback onPress={() =>  navigation.navigate('AlaramOlahraga')}>
-          <View >
-            <Image source={require('../../assets/alarm_olahraga.png')} style={{width:144, height:144}}/>
-            <Text style={{textAlign:"center", fontFamily:fonts.primary[400], fontSize:15, }}>Alarm Olahraga</Text>
+          <MyGap jarak={15} />
+
+          <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+            {/* RIWAYAT MEDIS */}
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('RiwayatMedis')}>
+              <View >
+                <Image source={require('../../assets/riwayat_medis.png')} style={{ width: windowWidth / 3, height: windowWidth / 3 }} />
+                <Text style={{ textAlign: "center", fontFamily: fonts.primary[400], fontSize: 14, }}>Riwayat Medis</Text>
+              </View>
+            </TouchableWithoutFeedback>
+
+            {/* Alarm Olahraga */}
+            <TouchableWithoutFeedback onPress={() => navigation.navigate('Artikel')}>
+              <View >
+                <Image source={require('../../assets/artikel_jantung.png')} style={{ width: windowWidth / 3, height: windowWidth / 3 }} />
+                <Text style={{ textAlign: "center", fontFamily: fonts.primary[400], fontSize: 14, }}>Artikel Seputar{'\n'}Jantung</Text>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableWithoutFeedback>
-        </View>
-
-    <MyGap jarak={15}/>
-
-        <View style={{flexDirection:"row", justifyContent:"space-around"}}>
-{/* RIWAYAT MEDIS */}
-<TouchableWithoutFeedback onPress={() => navigation.navigate('RiwayatMedis')}>
-  <View >
-    <Image source={require('../../assets/riwayat_medis.png')} style={{width:144, height:144}}/>
-    <Text style={{textAlign:"center", fontFamily:fonts.primary[400], fontSize:15, }}>Riwayat Medis</Text>
-  </View>
-</TouchableWithoutFeedback>
-
-{/* Alarm Olahraga */}
-<TouchableWithoutFeedback onPress={() => navigation.navigate('Artikel')}>
-  <View >
-    <Image source={require('../../assets/artikel_jantung.png')} style={{width:144, height:144}}/>
-    <Text style={{textAlign:"center", fontFamily:fonts.primary[400], fontSize:15, }}>Artikel Seputar{'\n'}Jantung</Text>
-  </View>
-</TouchableWithoutFeedback>
-</View>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -151,11 +271,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     margin: 5,
-    height: windowHeight / 4, // Adjusted height for carousel item
+    height: windowHeight / 4.5, // Adjusted height for carousel item
   },
   carouselImage: {
     width: '100%',
     height: '100%', // Adjusted height for image
-    resizeMode: 'contain',
+    // resizeMode: 'contain',
+    borderRadius: 10,
   }
 });

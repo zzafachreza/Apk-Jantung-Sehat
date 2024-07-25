@@ -37,7 +37,7 @@ export default function Splash({ navigation }) {
           navigation.replace('LoginMenu');
         } else {
           // navigation.replace('GetStarted')
-          navigation.replace('MainApp')
+          navigation.replace('Home')
         }
       })
     }, 1200)
@@ -58,26 +58,26 @@ export default function Splash({ navigation }) {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:colors.white
-      
+        backgroundColor: colors.white
+
       }}>
-     <ImageBackground source={require('../../assets/bgsplash.png')}   style={{
-      flex:1,
-      width:'100%',
-      height:'100%',
-      justifyContent: 'center',
-    alignItems: 'center',
-    
-     }}>
-     <Animated.Image
-        source={require('../../assets/logo.png')}
-          resizeMode="contain"
-          style={{
-            width: 407,
-            height: 407   
-          }}
-        />
-        {/* <Animated.Text style={{
+        <ImageBackground source={require('../../assets/bgsplash.png')} style={{
+          flex: 1,
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+
+        }}>
+          <Animated.Image
+            source={require('../../assets/logo.png')}
+            resizeMode="contain"
+            style={{
+              width: 407,
+              height: 407
+            }}
+          />
+          {/* <Animated.Text style={{
           fontFamily: fonts.secondary[800],
           fontSize: MyDimensi/4,
           color: colors.white,
@@ -86,8 +86,8 @@ export default function Splash({ navigation }) {
           textAlign: 'center',
         }}>Monitoring Asupan MPASI</Animated.Text> */}
 
-        <ActivityIndicator color={colors.primary} size="large" />
-     </ImageBackground>
+          <ActivityIndicator color={colors.primary} size="large" />
+        </ImageBackground>
       </View>
 
 

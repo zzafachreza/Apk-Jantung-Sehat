@@ -25,40 +25,47 @@ import AddRiwayatMedis from './RiwayatMedis/add';
 import Artikel from './Artikel';
 import RiwayatTensi from './RiwayatMedis/rriwayat';
 import AddTensi from './RiwayatMedis/addtensi';
+import ArtikelDetail from './Artikel/ArtikelDetail';
+import StopwatchPage from './AlaramOlahraga/Stopwatch';
+import MedisPdf from './RiwayatMedis/MedisPdf';
+
 
 
 
 
 
 export {
-Splash,
-Home,
-Account,
-AccountEdit,
-Tumbuhanmu,
-Quiz,
-TingkatSatu,
-NotesPage,
-InputNote,
-ResultNote,
-TingkatDua,
-Logout,
-LoginPage,
-menuLogin,
-Register,
-WelcomePage,
-JenisPenyakitJantung,
-GenderSelect,
-AlarmObat,
-AddAlarmObat,
-AlaramOlahraga,
-HistoryAlaramOlahraga,
-RiwayatMedis,
-AddRiwayatMedis,
-Artikel,
-RiwayatTensi,
-AddTensi,
+    MedisPdf,
+    Splash,
+    Home,
+    Account,
+    AccountEdit,
+    Tumbuhanmu,
+    Quiz,
+    TingkatSatu,
+    NotesPage,
+    InputNote,
+    ResultNote,
+    TingkatDua,
+    Logout,
+    LoginPage,
+    menuLogin,
+    Register,
+    WelcomePage,
+    JenisPenyakitJantung,
+    GenderSelect,
+    AlarmObat,
+    AddAlarmObat,
+    AlaramOlahraga,
+    HistoryAlaramOlahraga,
+    RiwayatMedis,
+    AddRiwayatMedis,
+    Artikel,
+    RiwayatTensi,
+    AddTensi,
+    ArtikelDetail,
 
+    StopwatchPage,
 
 
 
