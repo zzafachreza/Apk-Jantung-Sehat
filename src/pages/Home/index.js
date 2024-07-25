@@ -166,7 +166,7 @@ export default function Home({ navigation, route }) {
       <ImageBackground source={require('../../assets/bgheader.png')} style={{ padding: 10, flexDirection: 'row', justifyContent: "space-between", paddingTop: 20 }}>
         {/* NAMA USER */}
         <View>
-          <Text style={{ color: colors.white, fontFamily: fonts.primary[300], fontSize: 20 }}>Ha, {user.nama_lengkap}</Text>
+          <Text style={{ color: colors.white, fontFamily: fonts.primary[300], fontSize: 20 }}>Hai, {user.nama_lengkap}</Text>
           <Text style={{ color: colors.white, fontFamily: fonts.primary[600], fontSize: 12 }}>Jangan Biarkan Penyakit Jantung{'\n'}Menghalangi Langkahmu. Tetap Semangat!</Text>
         </View>
         <View>

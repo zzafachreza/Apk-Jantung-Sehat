@@ -10,7 +10,7 @@ import {
     ActivityIndicator,
 } from 'react-native';
 import { windowWidth, fonts, MyDimensi } from '../../utils/fonts';
-import { getData, MYAPP, storeData, urlAPI, urlApp, urlAvatar } from '../../utils/localStorage';
+import { apiURL, getData, MYAPP, storeData, urlAPI, urlApp, urlAvatar } from '../../utils/localStorage';
 import { colors } from '../../utils/colors';
 import { MyButton, MyGap, MyHeader } from '../../components';
 import { Icon } from 'react-native-elements';
@@ -23,7 +23,10 @@ import { ScrollView } from 'react-native';
 
 export default function ({ navigation, route }) {
     const [user, setUser] = useState({});
-    const [com, setCom] = useState({});
+    const [comp, setComp] = useState({
+        website: '',
+        tlp: '',
+    });
     const isFocused = useIsFocused();
     const [wa, setWA] = useState('');
     const [open, setOpen] = useState(true);
@@ -39,6 +42,11 @@ export default function ({ navigation, route }) {
                 setUser(res);
 
             });
+
+            axios.post(apiURL + 'company').then(res => {
+                console.log(res.data);
+                setComp(res.data.data);
+            })
         }
 
 
@@ -120,6 +128,32 @@ export default function ({ navigation, route }) {
                             flex: 1,
                         }}>
 
+                            <View style={{
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}>
+                                <View style={{
+                                    width: 100,
+                                    height: 100,
+                                    borderWidth: 1,
+                                    borderColor: colors.border,
+                                    overflow: 'hidden',
+                                    borderRadius: 20,
+                                    justifyContent: 'center',
+                                    alignItems: 'center'
+                                }}>
+
+                                    <Image source={{
+                                        uri: user.foto_user
+                                    }} style={{
+                                        width: 100,
+                                        height: 100,
+
+                                    }} />
+
+                                </View>
+                            </View>
+
                             <View style={{ padding: 10, }}>
                                 <MyList label="Nama Lengkap" value={user.nama_lengkap} />
                                 <MyList label="Jenis User" value={user.tipe} />
@@ -159,7 +193,27 @@ export default function ({ navigation, route }) {
                 <View style={{
                     padding: 20,
                 }}>
-                    <MyButton warna={colors.primary} title="Edit Profile" Icons="create-outline" onPress={() => navigation.navigate('AccountEdit', user)} />
+
+                    <TouchableOpacity onPress={() => Linking.openURL(comp.website)}>
+                        <Image source={require('../../assets/bagikan.png')} style={{
+                            width: 120,
+                            height: 40,
+                            resizeMode: 'contain'
+                        }} />
+                    </TouchableOpacity>
+
+
+                    <TouchableOpacity onPress={() => Linking.openURL('https://api.whatsapp.com/send?phone=' + comp.tlp)} style={{
+                        marginVertical: 20,
+                    }}>
+                        <Image source={require('../../assets/hubungi.png')} style={{
+                            width: 150,
+                            height: 50,
+                            resizeMode: 'contain'
+                        }} />
+                    </TouchableOpacity>
+
+                    <MyButton warna={colors.primary} title="Edit Profile" Icons="create-outline" iconColor={colors.white} onPress={() => navigation.navigate('AccountEdit', user)} />
                     <MyGap jarak={10} />
                     <MyButton onPress={btnKeluar} warna={colors.secondary} title="Log Out" Icons="log-out-outline" iconColor={colors.primary} colorText={colors.primary} />
                 </View>

@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontSize: MyDimensi / 4,
     fontFamily: fonts.primary[400],
-    height: 48,
+    height: 50,
   },
   eyeIcon: {
     position: 'absolute',

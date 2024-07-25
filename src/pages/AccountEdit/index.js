@@ -27,6 +27,7 @@ export default function AccountEdit({ navigation, route }) {
 
     const [kirim, setKirim] = useState(route.params);
     const [loading, setLoading] = useState(false);
+    const [comp, setComp] = useState({})
     const sendServer = () => {
         setLoading(true);
         console.log(kirim);
@@ -52,6 +53,15 @@ export default function AccountEdit({ navigation, route }) {
         })
     }
 
+    useEffect(() => {
+        setKirim({
+            ...kirim,
+            newfoto_user: null,
+        });
+
+
+    }, [])
+
 
     return (
         <SafeAreaView style={{
@@ -63,7 +73,49 @@ export default function AccountEdit({ navigation, route }) {
                 paddingHorizontal: 20,
             }}>
 
+                <View style={{
+                    padding: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <TouchableOpacity onPress={() => {
 
+
+                        launchImageLibrary({
+                            includeBase64: true,
+                            quality: 1,
+                            mediaType: "photo",
+                            maxWidth: 200,
+                            maxHeight: 200
+                        }, response => {
+                            // console.log('All Response = ', response);
+
+                            setKirim({
+                                ...kirim,
+                                newfoto_user: `data:${response.type};base64, ${response.base64}`,
+                            });
+                        });
+
+
+
+                    }} style={{
+                        width: 100,
+                        height: 100,
+                        borderWidth: 1,
+                        borderColor: colors.border,
+                        overflow: 'hidden',
+                        borderRadius: 20,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <Image style={{
+                            width: 100,
+                            height: 100,
+                        }} source={{
+                            uri: kirim.newfoto_user !== null ? kirim.newfoto_user : kirim.foto_user,
+                        }} />
+                    </TouchableOpacity>
+                </View>
 
 
                 <MyInput label="Nama Lengkap" value={kirim.nama_lengkap} onChangeText={x => setKirim({ ...kirim, nama_lengkap: x })} />

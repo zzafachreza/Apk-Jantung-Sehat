@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ImageBackground, TouchableOpacity, StyleSheet, Picker, Modal, Image } from 'react-native';
-import { MyButton, MyHeader, MyInput, MyCalendar, MyPicker } from '../../components';
+import { MyButton, MyHeader, MyInput, MyCalendar, MyPicker, MyGap } from '../../components';
 import { ScrollView } from 'react-native';
 import { colors, fonts } from '../../utils';
 import { showMessage } from 'react-native-flash-message';
@@ -173,20 +173,20 @@ export default function AddAlarmObat({ navigation }) {
 
           <Text style={[styles.label, { marginTop: 20 }]}>Durasi Minum Obat</Text>
           <View style={styles.row}>
-            <View style={styles.halfPicker}>
-              <Picker
-                selectedValue={jumlahDurasi}
-                onValueChange={(itemValue, itemIndex) => setJumlahDurasi(itemValue)}
-              >
-                <Picker.Item label="Pilih Jumlah" value="" />
-                <Picker.Item label="1" value="1" />
-                <Picker.Item label="2" value="2" />
-                <Picker.Item label="3" value="3" />
-                <Picker.Item label="4" value="4" />
-                <Picker.Item label="5" value="5" />
-              </Picker>
+            <View style={{
+              flex: 1,
+              height: 60,
+              // backgroundColor: 'red',
+              padding: 0
+            }}>
+              <MyInput styleInput={{
+
+              }} label="Pilih Jumlah" value={jumlahDurasi} placeholder="Masukan jumlah" nolabel keyboardType='number-pad' onChangeText={x => setJumlahDurasi(x)} />
+
             </View>
+
             <View style={styles.halfPicker}>
+
               <Picker
                 selectedValue={satuanDurasi}
                 onValueChange={(itemValue, itemIndex) => setSatuanDurasi(itemValue)}
@@ -202,16 +202,12 @@ export default function AddAlarmObat({ navigation }) {
           <Text style={[styles.label, { marginTop: 20 }]}>Jenis Obat</Text>
           <View style={styles.row}>
             <View style={styles.halfPicker}>
-              <Picker
-                selectedValue={jumlahJenis}
-                onValueChange={(itemValue, itemIndex) => setJumlahJenis(itemValue)}
-              >
-                <Picker.Item label="Pilih Jumlah" value="" />
-                <Picker.Item label="1" value="1" />
-                <Picker.Item label="2" value="2" />
-                <Picker.Item label="3" value="3" />
-                <Picker.Item label="4" value="4" />
-              </Picker>
+
+              <MyInput styleInput={{
+
+              }} label="Pilih Jumlah" value={jumlahJenis} placeholder="Masukan jumlah" nolabel keyboardType='number-pad' onChangeText={x => setJumlahJenis(x)} />
+
+
             </View>
             <View style={styles.halfPicker}>
               <Picker
@@ -295,9 +291,11 @@ const styles = StyleSheet.create({
   },
   halfPicker: {
     flex: 1,
+    marginTop: 5,
     marginHorizontal: 5,
     borderWidth: 1,
     borderRadius: 10,
+    height: 50,
     borderColor: '#E7E8EE',
     backgroundColor: 'white',
   },
