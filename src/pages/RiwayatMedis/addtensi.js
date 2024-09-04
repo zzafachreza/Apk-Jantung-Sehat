@@ -104,35 +104,50 @@ export default function AddTensi({ navigation }) {
           </View>
           {hasil.gula.length > 0 &&
 
-            <View style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around'
-            }}>
-              <View>
-                <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fonts.secondary[600],
-                  fontSize: 14
-                }}>Tensi</Text>
-                <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fonts.secondary[800],
-                  fontSize: 20
-                }}>{hasil.tensi}</Text>
+            <>
+              <View style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around'
+              }}>
+                <View>
+                  <Text style={{
+                    textAlign: 'center',
+                    fontFamily: fonts.secondary[600],
+                    fontSize: 14
+                  }}>Tensi</Text>
+                  <Text style={{
+                    textAlign: 'center',
+                    fontFamily: fonts.secondary[800],
+                    fontSize: 20
+                  }}>{hasil.tensi}</Text>
+                </View>
+                <View>
+                  <Text style={{
+                    textAlign: 'center',
+                    fontFamily: fonts.secondary[600],
+                    fontSize: 14
+                  }}>Gula Darah</Text>
+                  <Text style={{
+                    textAlign: 'center',
+                    fontFamily: fonts.secondary[800],
+                    fontSize: 20
+                  }}>{hasil.gula}</Text>
+                </View>
               </View>
-              <View>
+              <View style={{
+                marginTop: 10,
+              }}>
                 <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fonts.secondary[600],
-                  fontSize: 14
-                }}>Gula Darah</Text>
+                  fontFamily: fonts.secondary[400], fontSize: 12,
+                  lineHeight: 20,
+                }}>1. Hindari minum obat hipertensi jika tensi dibawah normal
+                </Text>
                 <Text style={{
-                  textAlign: 'center',
-                  fontFamily: fonts.secondary[800],
-                  fontSize: 20
-                }}>{hasil.gula}</Text>
+                  fontFamily: fonts.secondary[400], fontSize: 12,
+                  lineHeight: 20,
+                }}>2. Hindari minum obat DM jika kadar glukosa dibawah normal</Text>
               </View>
-            </View>
+            </>
           }
         </View>
       </ScrollView>

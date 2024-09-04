@@ -44,7 +44,9 @@ export default function AlarmObat({ navigation }) {
       flex: 1, width: '100%', height: '100%',
     }}>
       <MyHeader onPress={backPage} judul="Alarm Obat" />
-
+      <View>
+        <Text>asd</Text>
+      </View>
       <View style={{
         flex: 1,
         padding: 16

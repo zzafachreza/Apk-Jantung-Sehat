@@ -14,19 +14,19 @@ export default function JenisPenyakitJantung({ navigation, route }) {
   const [otherOption, setOtherOption] = useState('');
 
   const [options, setOptions] = useState([
-    { cek: 0, label: "Aritmia", description: "Gangguan irama jantung" },
-    { cek: 0, label: "Penyakit Katup Jantung", description: "Kondisi katup pada jantung mengalami gangguan struktural atau fungsional" },
+    { cek: 0, label: "Aritmia/Kelistrikan", description: "Gangguan irama jantung" },
+    { cek: 0, label: "Penyakit Jantung Katup", description: "Kondisi katup pada jantung mengalami gangguan struktural atau fungsional" },
     { cek: 0, label: "Penyakit Jantung Koroner", description: "Kondisi yang disebabkan oleh penyempitan atau penyumbatan arteri koroner" },
     { cek: 0, label: "Gagal Jantung", description: "Kondisi medis ketika jantung tidak mampu memompa darah dengan efisiensi yang cukup" },
-    { cek: 0, label: "Penyakit Arteri Perifer", description: "Arteri di luar jantung dan otak mengalami penyempitan atau penyumbatan" },
+    { cek: 0, label: "Penyakit Gangguan Pembuluh Darah (Vaskuler)", description: "Arteri di luar jantung dan otak mengalami penyempitan atau penyumbatan" },
     { cek: 0, label: "Penyakit Jantung Bawaan", description: "Kondisi medis yang terjadi karena adanya kelainan struktural pada jantung sejak lahir" },
-    { cek: 0, label: "Penyakit Perikardinal", description: "Kondisi yang mempengaruhi perikardium, yaitu lapisan tipis jaringan yang melapisi dan melindungi jantung" },
-    { cek: 0, label: "Lainnya", description: "", showInput: true },
+    { cek: 0, label: "Penyakit Pericard", description: "Kondisi yang mempengaruhi perikardium, yaitu lapisan tipis jaringan yang melapisi dan melindungi jantung" },
+    { cek: 0, label: "Lain-lainnya", description: "", showInput: true },
   ]);
 
   const handleOptionSelect = (label) => {
     setSelectedOption(label);
-    if (label !== "Lainnya") {
+    if (label !== "Lain-lainnya") {
       setOtherOption("");
     }
   };
@@ -88,12 +88,12 @@ export default function JenisPenyakitJantung({ navigation, route }) {
                   fontFamily: fonts.secondary[600],
                   fontSize: 12,
                 }}>{item.label}</Text>
-                {item.label == 'Lainnya' && item.cek > 0 && <MyInput nolabel onChangeText={x => {
+                {item.label == 'Lain-lainnya' && item.cek > 0 && <MyInput nolabel onChangeText={x => {
                   let tmp = [...options];
                   tmp[index].description = x;
                   setOptions(tmp);
                 }} />}
-                {item.label !== 'Lainnya' &&
+                {item.label !== 'Lain-lainnya' &&
 
                   <Text style={{
                     fontFamily: fonts.secondary[400],
